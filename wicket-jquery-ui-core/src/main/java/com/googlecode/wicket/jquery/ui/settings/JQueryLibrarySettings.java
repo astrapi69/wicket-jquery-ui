@@ -31,8 +31,8 @@ import com.googlecode.wicket.jquery.ui.resource.JQueryUIResourceReference;
  *     {
  *         super.init();
  *
- *         JQueryLibrarySettings.setJQueryReference(new JavaScriptResourceReference(MyApplication.class, "jquery-1.8.0.min.js"));
- *         JQueryLibrarySettings.setJQueryUIReference(new JavaScriptResourceReference(MyApplication.class, "jquery-ui-1.8.23.min.js"));
+ *         JQueryLibrarySettings.setJQueryReference(new JavaScriptResourceReference(MyApplication.class, "jquery-1.8.2.min.js"));
+ *         JQueryLibrarySettings.setJQueryUIReference(new JavaScriptResourceReference(MyApplication.class, "jquery-ui-1.9.0.min.js"));
  *     }
  * }
  * <pre></code>
