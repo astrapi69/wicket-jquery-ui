@@ -17,24 +17,30 @@
 package com.googlecode.wicket.jquery.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * Provides a default implementation of {@link JQueryAbstractBehavior}.
- * 
+ *
  * @author Sebastien Briquet - sebfz1
  * @since 1.0
  */
 public class JQueryBehavior extends JQueryAbstractBehavior
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	protected final String selector;
 	protected final String method;
 	protected final Options options;
-	
+
+	private List<String> events = null;
+
 	/**
 	 * Constructor
 	 * @param selector the html selector (ie: "#myId")
@@ -53,7 +59,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	{
 		this(selector, method, new Options());
 	}
-	
+
 	/**
 	 * Constructor
 	 * @param selector the html selector (ie: "#myId")
@@ -63,12 +69,35 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	public JQueryBehavior(String selector, String method, Options options)
 	{
 		super(method);
-		
+
 		this.method = method;
 		this.options = options;
 		this.selector = selector;
 	}
 
+	// Methods //
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
+	{
+		super.renderHead(component, response);
+
+		// renders javascript events
+		if (this.events != null)
+		{
+			StringBuilder statements = new StringBuilder("$(function() { ");
+
+			for (String event : this.events)
+			{
+				statements.append(event);
+			}
+
+			statements.append(" });");
+
+			response.renderJavaScript(statements, this.getToken() + "-events");
+		}
+	}
+
+	// Properties //
 	/**
 	 * Sets a behavior option.
 	 * @param key the option key
@@ -81,7 +110,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 		{
 			throw new WicketRuntimeException("Options have not been defined (null has been passed to the constructor)");
 		}
-		
+
 		this.options.set(key, value);
 
 		return this;
@@ -99,8 +128,34 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 		}
 	}
 
-	
+
 	// Statements //
+	/**
+	 * Registers a jQuery event callback
+	 * @param event the jQuery event (ie: "click")
+	 * @param callback the jQuery callback
+	 */
+	protected void on(String event, String callback)
+	{
+		this.on(this.selector, event, callback);
+	}
+
+	/**
+	 * Registers a jQuery event callback
+	 * @param selector the html selector (ie: "#myId")
+	 * @param event the jQuery event (ie: "click")
+	 * @param callback the jQuery callback
+	 */
+	protected synchronized void on(String selector, String event, String callback)
+	{
+		if (this.events == null)
+		{
+			this.events = new ArrayList<String>();
+		}
+
+		this.events.add(String.format("$('%s').on('%s', %s);", selector, event, callback));
+	}
+
 	@Override
 	protected String $()
 	{
@@ -109,7 +164,6 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 
 	/**
 	 * Gets the jQuery statement.<br/>
-	 * <b>Warning:</b> If {@link #$()} is overridden to handle a different statement, this method could be inefficient.
 	 * @param options the options to be applied
 	 * @return String like '$(function() { ... })'
 	 */
@@ -124,7 +178,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 * @param method the jQuery method to invoke
 	 * @param options the options to be applied
 	 * @return String like '$(function() { ... })'
-	 */	
+	 */
 	private String $(String selector, String method, String options)
 	{
 		return String.format("$(function() { $('%s').%s(%s); });", selector, method, options);

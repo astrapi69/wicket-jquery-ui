@@ -124,7 +124,7 @@ public abstract class JQueryAbstractBehavior extends Behavior
 
 		if (target != null)
 		{
-			target.appendJavaScript(this.toString());
+			target.appendJavaScript(this.$());
 		}
 	}
 
