@@ -28,8 +28,7 @@ public class AccordionPanelPage extends AbstractAccordionPage
 
 		// Options that are recommended when using dynamic content (AjaxTab) //
 		Options options = new Options();
-		options.set("autoHeight", false);
-		options.set("clearStyle", true);
+		options.set("heightStyle", Options.asString("content"));
 
 		// Accordion //
 		this.add(new AccordionPanel("accordion", this.newTabList(), options) {
@@ -37,7 +36,7 @@ public class AccordionPanelPage extends AbstractAccordionPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onChanging(AjaxRequestTarget target, int index, ITab tab)
+			protected void onClick(AjaxRequestTarget target, int index, ITab tab)
 			{
 				info(String.format("selected tab: #%d - %s", index, tab.getTitle().getObject()));
 				target.add(feedbackPanel);
