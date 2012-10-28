@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 public class JQueryBehavior extends JQueryAbstractBehavior
 {
 	private static final long serialVersionUID = 1L;
+	private static final String NULL_OPTIONS = "Options have not been defined (null has been supplied to the constructor)";
 
 	protected final String selector;
 	protected final String method;
@@ -99,6 +100,21 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 
 	// Properties //
 	/**
+	 * Gets a behavior option, referenced by its key
+	 * @param key the option key
+	 * @return null if the key does not exists
+	 */
+	public Object getOption(String key)
+	{
+		if (this.options == null)
+		{
+			throw new WicketRuntimeException(NULL_OPTIONS);
+		}
+
+		return this.options.get(key);
+	}
+
+	/**
 	 * Sets a behavior option.
 	 * @param key the option key
 	 * @param value the option value
@@ -108,7 +124,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	{
 		if (this.options == null)
 		{
-			throw new WicketRuntimeException("Options have not been defined (null has been passed to the constructor)");
+			throw new WicketRuntimeException(NULL_OPTIONS);
 		}
 
 		this.options.set(key, value);

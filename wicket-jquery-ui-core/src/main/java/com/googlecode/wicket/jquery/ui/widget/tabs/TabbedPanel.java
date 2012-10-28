@@ -217,7 +217,7 @@ public class TabbedPanel extends JQueryPanel
 	/**
 	 * Provides an event object that will be broadcasted by the {@link JQueryAjaxBehavior} 'show' callback
 	 */
-	static class ShowEvent extends JQueryEvent
+	class ShowEvent extends JQueryEvent
 	{
 		private final int index;
 
