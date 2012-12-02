@@ -14,6 +14,7 @@ import com.googlecode.wicket.jquery.ui.widget.tabs.AjaxTab;
 import com.googlecode.wicket.jquery.ui.widget.tabs.SimpleTab;
 import com.googlecode.wicket.jquery.ui.widget.tabs.TabbedPanel;
 
+//TODO: rename to TabbedPanelPage?
 public class WidgetTabsPage extends AbstractTabsPage
 {
 	private static final long serialVersionUID = 1L;

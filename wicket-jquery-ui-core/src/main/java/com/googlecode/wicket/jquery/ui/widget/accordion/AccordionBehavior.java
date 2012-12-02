@@ -55,12 +55,12 @@ public class AccordionBehavior extends JQueryBehavior
 	}
 
 	/**
-	 * Activates the selected tab, referenced by the supplied index
+	 * Activates the selected tab, identified by the index
 	 * @param target the {@link AjaxRequestTarget}
 	 * @param index the tab's index
 	 */
 	public void activate(int index, AjaxRequestTarget target)
 	{
-		target.appendJavaScript(this.$("'option', 'active', " + index));
+		target.appendJavaScript(this.$("'option'", "'active'", index));
 	}
 }

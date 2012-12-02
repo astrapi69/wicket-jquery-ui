@@ -19,11 +19,9 @@ package com.googlecode.wicket.jquery.ui.widget.accordion;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.markup.html.list.LoopItem;
@@ -51,14 +49,12 @@ public class AccordionPanel extends JQueryPanel
 	private final List<ITab> tabs;
 	private final Options options;
 	private AccordionBehavior widgetBehavior;
-	private JQueryAjaxBehavior onClickBehavior;
-	private JQueryAjaxBehavior onActivateBehavior;
-
+	private JQueryAjaxBehavior activateEventBehavior;
 
 	/**
 	 * Constructor
 	 * @param id the markup id
-	 * @param tabs the list of {@link ITab}
+	 * @param tabs the list of {@link ITab}<code>s</code>
 	 */
 	public AccordionPanel(String id, List<ITab> tabs)
 	{
@@ -68,7 +64,7 @@ public class AccordionPanel extends JQueryPanel
 	/**
 	 * Constructor
 	 * @param id the markup id
-	 * @param tabs the list of {@link ITab}
+	 * @param tabs the list of {@link ITab}<code>s</code>
 	 * @param options {@link Options}
 	 */
 	public AccordionPanel(String id, List<ITab> tabs, Options options)
@@ -100,49 +96,7 @@ public class AccordionPanel extends JQueryPanel
 				{
 					item.add(new Label("title", tab.getTitle()));
 					item.add(tab.getPanel("panel"));
-
-					if (index == this.getActiveIndex() && tab instanceof AjaxTab)
-					{
-						AccordionPanel.this.scheduleLoad((AjaxTab) tab);
-					}
 				}
-			}
-
-			/**
-			 * Gets the tab's index ('active') that has been set by #onConfigure or #activate method
-			 * @return the user-selected index
-			 */
-			private int getActiveIndex()
-			{
-				Integer index = (Integer) widgetBehavior.getOption("active"); //do not use Accordion.this.options here, behavior options could have been set during onConfigure
-
-				return index != null ? index : 0;
-			}
-		});
-	}
-
-	/**
-	 * Schedule the load of the selected ajax tab
-	 */
-	//can be removed if accordion widget provides a 'show' event (as for tab widget)
-	private void scheduleLoad(final AjaxTab tab)
-	{
-		this.add(new AbstractDefaultAjaxBehavior() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void respond(AjaxRequestTarget target)
-			{
-				tab.load(target);
-			}
-
-			@Override
-			public void renderHead(Component component, IHeaderResponse response)
-			{
-				super.renderHead(component, response);
-
-				response.renderOnDomReadyJavaScript(this.getCallbackScript().toString());
 			}
 		});
 	}
@@ -162,13 +116,15 @@ public class AccordionPanel extends JQueryPanel
 	}
 
 	/**
-	 * Activates the selected tab
+	 * Activates the selected tab<br/>
+	 * <b>Warning: </b> invoking this method results to a dual client-server round-trip. Use this method if you cannot use {@link #setActiveTab(int)} followed by <code>target.add(myTabbedPannel)</code>
 	 * @param target the {@link AjaxRequestTarget}
 	 * @param index the tab's index to activate
+	 * @return this, for chaining
 	 */
 	public void setActiveTab(int index, AjaxRequestTarget target)
 	{
-		this.widgetBehavior.activate(index, target); //sets 'active' option, that fires 'activate' event (best is that is also fires 'show' event)
+		this.widgetBehavior.activate(index, target); //sets 'active' option, that fires 'activate' event (best would be that is also fires a 'show' event)
 	}
 
 	/**
@@ -190,55 +146,14 @@ public class AccordionPanel extends JQueryPanel
 		};
 	}
 
-	/**
-	 * Indicates whether the 'click' event is enabled
-	 * If true, the {@link #onClick(AjaxRequestTarget, int, ITab)} event will be triggered
-	 *
-	 * @return false by default
-	 */
-	protected boolean isOnClickEnabled()
-	{
-		return false;
-	}
-
 	// Events //
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
 
-		this.add(this.onClickBehavior = this.newOnClickBehavior());
-		this.add(this.onActivateBehavior = this.newOnActivateBehavior());
+		this.add(this.activateEventBehavior = this.newActivateEventBehavior());
 		this.add(this.widgetBehavior = (AccordionBehavior) JQueryWidget.newWidgetBehavior(this));
-	}
-
-	@Override
-	public void onEvent(IEvent<?> event)
-	{
-		if (event.getPayload() instanceof AccordionEvent)
-		{
-			AccordionEvent payload = (AccordionEvent) event.getPayload();
-			AjaxRequestTarget target = payload.getTarget();
-
-			int index = payload.getIndex();
-			ITab tab = this.tabs.get(index);
-
-			if (payload instanceof ClickEvent)
-			{
-				this.onClick(target, index, tab);
-			}
-
-			if (payload instanceof ActivateEvent)
-			{
-				// AjaxTab#load cannot be called in click block (#activate only fires 'activate' event)
-				if (tab instanceof AjaxTab)
-				{
-					((AjaxTab)tab).load(target);
-				}
-
-				this.onActivate(target, index, tab);
-			}
-		}
 	}
 
 	/**
@@ -249,26 +164,37 @@ public class AccordionPanel extends JQueryPanel
 	 */
 	protected void onConfigure(JQueryBehavior behavior)
 	{
-		behavior.setOptions(this.options);
 	}
 
-	/**
-	 * Triggered when an accordion tab is clicked ('click' event).<br/>
-	 * {@link #isOnClickEnabled()} should return true for this event to be triggered.<br/>
-	 * <b>Note:</b> the click event occurs before the activate event
-	 *
-	 * @param target the {@link AjaxRequestTarget}
-	 * @param index the accordion header that triggered this event
-	 * @param tab the {@link ITab} that corresponds to the index
-	 */
-	//better to be replaced by #onShow() (if/when available)
-	protected void onClick(AjaxRequestTarget target, int index, ITab tab)
+	@Override
+	public void onEvent(IEvent<?> event)
 	{
+		if (event.getPayload() instanceof ActivateEvent)
+		{
+			ActivateEvent payload = (ActivateEvent) event.getPayload();
+			AjaxRequestTarget target = payload.getTarget();
+
+			int index = payload.getIndex();
+
+			if (index > -1) /* index could be not known depending on options and user action */
+			{
+				ITab tab = this.tabs.get(index);
+
+				if (payload instanceof ActivateEvent)
+				{
+					if (tab instanceof AjaxTab)
+					{
+						((AjaxTab)tab).load(target);
+					}
+
+					this.onActivate(target, index, tab);
+				}
+			}
+		}
 	}
 
 	/**
 	 * Triggered when an accordion tab has been activated ('activate' event).<br/>
-	 * <b>Note:</b> the activate event occurs after the click event
 	 *
 	 * @param target the {@link AjaxRequestTarget}
 	 * @param index the accordion header that triggered this event
@@ -282,7 +208,7 @@ public class AccordionPanel extends JQueryPanel
 	@Override
 	public JQueryBehavior newWidgetBehavior(String selector)
 	{
-		return new AccordionBehavior(selector) {
+		return new AccordionBehavior(selector, this.options) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -291,52 +217,18 @@ public class AccordionPanel extends JQueryPanel
 			{
 				AccordionPanel.this.onConfigure(this);
 
-				if (AccordionPanel.this.isOnClickEnabled())
-				{
-					this.on("click", onClickBehavior.getCallbackFunction());
-				}
-
-				this.setOption("activate", onActivateBehavior.getCallbackFunction());
+				this.setOption("create", activateEventBehavior.getCallbackFunction());
+				this.setOption("activate", activateEventBehavior.getCallbackFunction());
 			}
 		};
 	}
 
 	// Factories //
 	/**
-	 * Gets a new {@link JQueryAjaxBehavior} that acts as the 'click' callback
-	 * @return the {@link JQueryAjaxBehavior}
-	 */
-	private JQueryAjaxBehavior newOnClickBehavior()
-	{
-		return new JQueryAjaxBehavior(this) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getCallbackFunction()
-			{
-				return "function(event) { " + this.getCallbackScript() + " }";
-			}
-
-			@Override
-			public CharSequence getCallbackScript()
-			{
-				return this.generateCallbackScript("wicketAjaxGet('" + this.getCallbackUrl() + "&index=' + $(event.currentTarget).accordion('option', 'active')");
-			}
-
-			@Override
-			protected JQueryEvent newEvent(AjaxRequestTarget target)
-			{
-				return new ClickEvent(target);
-			}
-		};
-	}
-
-	/**
 	 * Gets a new {@link JQueryAjaxBehavior} that acts as the 'activate' callback
 	 * @return the {@link JQueryAjaxBehavior}
 	 */
-	private JQueryAjaxBehavior newOnActivateBehavior()
+	private JQueryAjaxBehavior newActivateEventBehavior()
 	{
 		return new JQueryAjaxBehavior(this) {
 
@@ -366,7 +258,7 @@ public class AccordionPanel extends JQueryPanel
 	/**
 	 * Base class for accordion event objects
 	 */
-	abstract class AccordionEvent extends JQueryEvent
+	private class ActivateEvent extends JQueryEvent
 	{
 		private final int index;
 
@@ -374,11 +266,11 @@ public class AccordionPanel extends JQueryPanel
 		 * Constructor
 		 * @param target the {@link AjaxRequestTarget}
 		 */
-		public AccordionEvent(AjaxRequestTarget target)
+		public ActivateEvent(AjaxRequestTarget target)
 		{
 			super(target);
 
-			this.index = RequestCycleUtils.getQueryParameterValue("index").toInt();
+			this.index = RequestCycleUtils.getQueryParameterValue("index").toInt(-1);
 		}
 
 		/**
@@ -388,36 +280,6 @@ public class AccordionPanel extends JQueryPanel
 		public int getIndex()
 		{
 			return this.index;
-		}
-	}
-
-	/**
-	 * Provides an event object that will be broadcasted by the {@link JQueryAjaxBehavior} 'click' callback
-	 */
-	class ClickEvent extends AccordionEvent
-	{
-		/**
-		 * Constructor
-		 * @param target the {@link AjaxRequestTarget}
-		 */
-		public ClickEvent(AjaxRequestTarget target)
-		{
-			super(target);
-		}
-	}
-
-	/**
-	 * Provides an event object that will be broadcasted by the {@link JQueryAjaxBehavior} 'activate' callback
-	 */
-	class ActivateEvent extends AccordionEvent
-	{
-		/**
-		 * Constructor
-		 * @param target the {@link AjaxRequestTarget}
-		 */
-		public ActivateEvent(AjaxRequestTarget target)
-		{
-			super(target);
 		}
 	}
 }

@@ -180,6 +180,17 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 
 	/**
 	 * Gets the jQuery statement.<br/>
+	 * @param objects the list of options to be applied
+	 * @param options the options to be applied
+	 * @return String like '$(function() { ... })'
+	 */
+	public String $(Object... objects)
+	{
+		return this.$(Options.fromList(objects));
+	}
+
+	/**
+	 * Gets the jQuery statement.<br/>
 	 * @param options the options to be applied
 	 * @return String like '$(function() { ... })'
 	 */

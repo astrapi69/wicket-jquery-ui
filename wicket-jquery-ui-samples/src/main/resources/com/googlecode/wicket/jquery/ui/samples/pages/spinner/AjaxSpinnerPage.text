@@ -1,0 +1,13 @@
+<code>AjaxSpinner</code> is close to <code>Spinner</code> except that it performs an ajax post when the value changes.<br/>
+You may override <code>#onValueChanged()</code> as follow:<br/>
+<pre>
+form.add(new AjaxSpinner("spinner", model) {
+
+	@Override
+	protected void onValueChanged(AjaxRequestTarget target)
+	{
+		Integer i = this.getModelObject();
+		//TODO: do something with the value...
+	}
+});
+</pre>

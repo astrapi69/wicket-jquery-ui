@@ -24,7 +24,7 @@ import com.googlecode.wicket.jquery.ui.JQueryEvent;
 import com.googlecode.wicket.jquery.ui.ajax.JQueryAjaxPostBehavior;
 
 /**
- * Provides a new {@link JQueryAjaxPostBehavior} that will (should) be called on 'change' jQuery method
+ * Provides a new {@link JQueryAjaxPostBehavior} that will be called on 'change' jQuery method
  */
 public class JQueryAjaxChangeBehavior extends JQueryAjaxPostBehavior
 {

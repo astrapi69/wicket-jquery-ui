@@ -48,7 +48,7 @@ public class AccordionPanelPage extends AbstractAccordionPage
 			}
 		};
 
-		form.add(accordion.setActiveTab(1));
+		form.add(accordion);
 
 		form.add(new AjaxButton("button") {
 
@@ -57,7 +57,7 @@ public class AccordionPanelPage extends AbstractAccordionPage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				accordion.setActiveTab(2, target);
+				target.add(accordion.setActiveTab(2));
 			}
 		});
 	}
