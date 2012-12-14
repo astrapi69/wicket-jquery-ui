@@ -20,6 +20,7 @@ import com.googlecode.wicket.jquery.ui.samples.pages.kendo.datetimepicker.KendoD
 import com.googlecode.wicket.jquery.ui.samples.pages.kendo.dropdown.DefaultDropDownPage;
 import com.googlecode.wicket.jquery.ui.samples.pages.kendo.editor.DefaultEditorPage;
 import com.googlecode.wicket.jquery.ui.samples.pages.kendo.splitter.DefaultSplitterPage;
+import com.googlecode.wicket.jquery.ui.samples.pages.menu.DefaultMenuPage;
 import com.googlecode.wicket.jquery.ui.samples.pages.plugins.FontSizePage;
 import com.googlecode.wicket.jquery.ui.samples.pages.plugins.datepicker.RangeDatePickerPage;
 import com.googlecode.wicket.jquery.ui.samples.pages.progressbar.ButtonProgressBarPage;
@@ -53,7 +54,7 @@ public class SampleApplication extends WebApplication
 		this.mountPackage("/button", DefaultButtonPage.class);
 		this.mountPackage("/datepicker", DefaultDatePickerPage.class);
 		this.mountPackage("/dialog", MessageDialogPage.class);
-//		this.mountPackage("/menu",
+		this.mountPackage("/menu", DefaultMenuPage.class);
 		this.mountPackage("/progressbar", ButtonProgressBarPage.class);
 		this.mountPackage("/slider", DefaultSliderPage.class);
 		this.mountPackage("/spinner", DefaultSpinnerPage.class);
