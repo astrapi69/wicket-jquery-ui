@@ -413,7 +413,7 @@ public class Calendar extends JQueryContainer
 			@Override
 			public String getCallbackFunction()
 			{
-				return String.format("function(start, end, allDay) { %s $('%s').fullCalendar('unselect'); }", this.getCallbackScript(), JQueryWidget.getSelector(Calendar.this));
+				return "function(start, end, allDay) { " + this.getCallbackScript() + " }";
 			}
 
 			@Override

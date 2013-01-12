@@ -180,19 +180,20 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 
 	/**
 	 * Gets the jQuery statement.<br/>
-	 * @param objects the list of options to be applied
-	 * @param options the options to be applied
-	 * @return String like '$(function() { ... })'
+	 * <b>Warning: </b> This method is *not* called by this behavior directly (only {@link #$()} is).
+	 * @param options the list of options to be supplied to the current method
+	 * @return Statement like '$(function() { ... })'
 	 */
-	public String $(Object... objects)
+	public String $(Object... options)
 	{
-		return this.$(Options.fromList(objects));
+		return this.$(Options.fromList(options));
 	}
 
 	/**
 	 * Gets the jQuery statement.<br/>
-	 * @param options the options to be applied
-	 * @return String like '$(function() { ... })'
+	 * <b>Warning: </b> This method is *not* called by this behavior directly (only {@link #$()} is).
+	 * @param options the options to be supplied to the current method
+	 * @return Statement like '$(function() { ... })'
 	 */
 	public String $(String options)
 	{
@@ -204,7 +205,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 * @param selector the html selector (ie: "#myId")
 	 * @param method the jQuery method to invoke
 	 * @param options the options to be applied
-	 * @return String like '$(function() { ... })'
+	 * @return Statement like '$(function() { ... })'
 	 */
 	private String $(String selector, String method, String options)
 	{

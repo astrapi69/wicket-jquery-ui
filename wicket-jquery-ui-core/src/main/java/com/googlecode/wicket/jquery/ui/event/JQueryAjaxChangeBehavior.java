@@ -24,7 +24,7 @@ import com.googlecode.wicket.jquery.ui.JQueryEvent;
 import com.googlecode.wicket.jquery.ui.ajax.JQueryAjaxPostBehavior;
 
 /**
- * Provides a new {@link JQueryAjaxPostBehavior} that will be called on 'change' jQuery method
+ * Provides a new {@link JQueryAjaxPostBehavior} that will (should) be called on 'change' jQuery method
  */
 public class JQueryAjaxChangeBehavior extends JQueryAjaxPostBehavior
 {
@@ -50,11 +50,20 @@ public class JQueryAjaxChangeBehavior extends JQueryAjaxPostBehavior
 	}
 
 	@Override
+	public String getCallbackFunction()
+	{
+		return "function(event, ui) { " + this.getCallbackScript() + " }";
+	}
+
+
+	// Factories //
+	@Override
 	protected JQueryEvent newEvent(AjaxRequestTarget target)
 	{
 		return new ChangeEvent(target);
 	}
 
+	// Event Object //
 	/**
 	 * Provides an event object that will be broadcasted by the {@link JQueryAjaxChangeBehavior}
 	 */

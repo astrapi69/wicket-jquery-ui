@@ -26,6 +26,7 @@ import org.apache.wicket.model.IModel;
 
 import com.googlecode.wicket.jquery.ui.JQueryBehavior;
 import com.googlecode.wicket.jquery.ui.ajax.JQueryAjaxBehavior;
+import com.googlecode.wicket.jquery.ui.ajax.JQueryAjaxPostBehavior;
 import com.googlecode.wicket.jquery.ui.event.ISelectionChangedListener;
 import com.googlecode.wicket.jquery.ui.event.JQueryAjaxChangeBehavior;
 import com.googlecode.wicket.jquery.ui.event.JQueryAjaxChangeBehavior.ChangeEvent;
@@ -43,15 +44,6 @@ public class AjaxDropDownList<T> extends DropDownList<T> implements ISelectionCh
 	private static final long serialVersionUID = 1L;
 
 	private JQueryAjaxBehavior onChangeBehavior;
-
-	/**
-	 * Constructor
-	 * @param id the markup id
-	 */
-	public AjaxDropDownList(String id)
-	{
-		super(id);
-	}
 
 	/**
 	 * Constructor
@@ -165,8 +157,18 @@ public class AjaxDropDownList<T> extends DropDownList<T> implements ISelectionCh
 		{
 			ChangeEvent payload = (ChangeEvent) event.getPayload();
 
-			this.onSelectionChanged();
-			this.onSelectionChanged(payload.getTarget(), this.getForm());
+			//In case of issue, consider copying code from AjaxFormComponentUpdatingBehavior.onEvent
+			this.dropdown.processInput();
+			this.validate();
+
+			if (this.isValid() && this.dropdown.isValid())
+			{
+				this.onSelectionChanged(payload.getTarget(), this.getForm());
+			}
+			else
+			{
+				this.onError(payload.getTarget());
+			}
 		}
 	}
 
@@ -175,22 +177,21 @@ public class AjaxDropDownList<T> extends DropDownList<T> implements ISelectionCh
 	{
 	}
 
+	/**
+	 * Triggered when the validation failed
+	 * @param target the {@link AjaxRequestTarget}
+	 */
+	protected void onError(AjaxRequestTarget target)
+	{
+	}
+
 	// Factories //
 	/**
-	 * Gets a new {@link JQueryAjaxBehavior} that will be called on 'change' javascript event
-	 * @return the {@link JQueryAjaxBehavior}
+	 * Gets a new {@link JQueryAjaxPostBehavior} that will be called on 'change' javascript event
+	 * @return the {@link JQueryAjaxPostBehavior}
 	 */
-	private JQueryAjaxChangeBehavior newOnChangeBehavior()
+	protected JQueryAjaxPostBehavior newOnChangeBehavior()
 	{
-		return new JQueryAjaxChangeBehavior(this) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getCallbackFunction()
-			{
-				return "function(event, ui) { " + this.getCallbackScript() + " }";
-			}
-		};
+		return new JQueryAjaxChangeBehavior(this, this.dropdown);
 	}
 }
