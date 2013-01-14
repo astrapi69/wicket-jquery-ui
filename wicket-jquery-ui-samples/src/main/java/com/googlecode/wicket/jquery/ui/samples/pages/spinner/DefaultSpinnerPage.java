@@ -31,7 +31,8 @@ public class DefaultSpinnerPage extends AbstractSpinnerPage
 		form.add(this.feedback.setOutputMarkupId(true));
 
 		// Spinner //
-		form.add(new Spinner<Integer>("spinner", form.getModel(), Integer.class).setRequired(true).setEnabled(false));
+		final Spinner<Integer> spinner = new Spinner<Integer>("spinner", form.getModel(), Integer.class);
+		form.add(spinner.setRequired(true).setEnabled(false));
 
 		// Buttons //
 		form.add(new Button("submit") {

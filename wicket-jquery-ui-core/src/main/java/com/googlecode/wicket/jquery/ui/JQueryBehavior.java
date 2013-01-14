@@ -175,7 +175,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	@Override
 	protected String $()
 	{
-		return this.$(this.selector, this.method, this.options.toString());
+		return JQueryBehavior.$(this.selector, this.method, this.options.toString());
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 */
 	public String $(String options)
 	{
-		return this.$(this.selector, this.method, options);
+		return JQueryBehavior.$(this.selector, this.method, options);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 * @param options the options to be applied
 	 * @return Statement like '$(function() { ... })'
 	 */
-	private String $(String selector, String method, String options)
+	private static String $(String selector, String method, String options)
 	{
 		return String.format("$(function() { $('%s').%s(%s); });", selector, method, options);
 	}

@@ -154,7 +154,7 @@ public class DynamicWizardPage extends AbstractWizardPage
 					public String getIdValue(Boolean bool, int index)
 					{
 						return Integer.toString(index);
-					};
+					}
 				}));
 			}
 

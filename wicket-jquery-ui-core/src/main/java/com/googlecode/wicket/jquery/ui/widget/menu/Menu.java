@@ -31,7 +31,6 @@ import com.googlecode.wicket.jquery.ui.JQueryEvent;
 import com.googlecode.wicket.jquery.ui.JQueryPanel;
 import com.googlecode.wicket.jquery.ui.Options;
 import com.googlecode.wicket.jquery.ui.ajax.JQueryAjaxBehavior;
-import com.googlecode.wicket.jquery.ui.utils.RequestCycleUtils;
 
 /**
  * Provides jQuery tabs based on a {@link JQueryPanel}
@@ -134,7 +133,7 @@ public class Menu extends JQueryPanel
 	{
 		if (event.getPayload() instanceof ClickEvent)
 		{
-			ClickEvent payload = (ClickEvent) event.getPayload();
+//			ClickEvent payload = (ClickEvent) event.getPayload();
 
 //			this.onClick(payload.getTarget(), payload.getMenuItem());
 		}
@@ -197,7 +196,7 @@ public class Menu extends JQueryPanel
 	 */
 	private class ClickEvent extends JQueryEvent
 	{
-		private final int index;
+//		private final int index;
 
 		/**
 		 * Constructor
@@ -208,16 +207,16 @@ public class Menu extends JQueryPanel
 		{
 			super(target);
 
-			this.index = RequestCycleUtils.getQueryParameterValue("index").toInt(-1);
+//			this.index = RequestCycleUtils.getQueryParameterValue("index").toInt(-1);
 		}
 
-		/**
-		 * Gets the tab's index
-		 * @return the index
-		 */
-		public int getIndex()
-		{
-			return this.index;
-		}
+//		/**
+//		 * Gets the tab's index
+//		 * @return the index
+//		 */
+//		public int getIndex()
+//		{
+//			return this.index;
+//		}
 	}
 }

@@ -180,15 +180,12 @@ public class AccordionPanel extends JQueryPanel
 			{
 				ITab tab = this.tabs.get(index);
 
-				if (payload instanceof ActivateEvent)
+				if (tab instanceof AjaxTab)
 				{
-					if (tab instanceof AjaxTab)
-					{
-						((AjaxTab)tab).load(target);
-					}
-
-					this.onActivate(target, index, tab);
+					((AjaxTab)tab).load(target);
 				}
+
+				this.onActivate(target, index, tab);
 			}
 		}
 	}

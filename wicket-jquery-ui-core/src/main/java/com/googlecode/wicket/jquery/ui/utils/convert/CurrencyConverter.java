@@ -14,16 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.googlecode.wicket.jquery.ui.ajax;
+package com.googlecode.wicket.jquery.ui.utils.convert;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import org.apache.wicket.util.convert.converter.AbstractNumberConverter;
 
 /**
+ * Utility class for retrieving request parameters
  *
  * @author Sebastien Briquet - sebfz1
- * @deprecated not yet used
  *
  */
-@Deprecated
-public interface IJQueryAjaxAware
+public class CurrencyConverter extends AbstractNumberConverter<Number>
 {
-	boolean fireEvents();
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public Number convertToObject(String value, Locale locale)
+	{
+		return parse(value, Double.MIN_VALUE, Double.MAX_VALUE, locale);
+	}
+
+	@Override
+	public NumberFormat getNumberFormat(Locale locale)
+	{
+		return NumberFormat.getCurrencyInstance(new Locale("fr", "FR")); //TODO change
+	}
+
+	@Override
+	protected Class<Number> getTargetType()
+	{
+		return null;
+	}
+
+	//TODO remove
+//	protected void getLocale()
+//	{
+//		// TODO Auto-generated method stub
+//
+//	}
+//
+//	new Locale("fr", "FR")
 }

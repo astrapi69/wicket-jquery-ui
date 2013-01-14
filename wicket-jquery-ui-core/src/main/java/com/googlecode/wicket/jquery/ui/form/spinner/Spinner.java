@@ -35,7 +35,6 @@ public class Spinner<T extends Number> extends TextField<T> implements IJQueryWi
 	private static final String METHOD = "spinner";
 
 	private Options options;
-//	private IConverter<T> converter;
 
 	/**
 	 * Constructor
@@ -43,7 +42,7 @@ public class Spinner<T extends Number> extends TextField<T> implements IJQueryWi
 	 */
 	public Spinner(final String id)
 	{
-		this(id, new Options(), null);
+		this(id, new Options());
 	}
 
 	/**
@@ -126,59 +125,6 @@ public class Spinner<T extends Number> extends TextField<T> implements IJQueryWi
 	}
 
 
-
-
-//	/**
-//	 * Constructor
-//	 * @param id the markup id
-//	 * @param pattern a <code>SimpleDateFormat</code> pattern
-//	 * @param options {@link Options}
-//	 */
-//	public Spinner(String id, String pattern, Options options)
-//	{
-//		super(id, pattern);
-//
-//		this.options = options;
-//	}
-
-//	/**
-//	 * Constructor
-//	 * @param id the markup id
-//	 * @param model the {@link IModel}
-//	 * @param pattern a <code>SimpleDateFormat</code> pattern
-//	 * @param options {@link Options}
-//	 */
-//	public Spinner(String id, IModel<Date> model, String pattern, Options options)
-//	{
-//		super(id, model, pattern);
-//
-//		this.options = options;
-//	}
-
-	// Methods //
-//	@Override
-//	public <C> IConverter<C> getConverter(final Class<C> type)
-//	{
-//		if (Number.class.isAssignableFrom(type))
-//		{
-//			if (this.converter == null)
-//			{
-//				this.converter = this.newConverter();
-//			}
-//
-//			return (IConverter<C>) this.converter;
-//		}
-//		else
-//		{
-//			return super.getConverter(type);
-//		}
-//	}
-//
-//	private IConverter<T> newConverter()
-//	{
-//		return null;
-//	}
-
 	// Events //
 	@Override
 	protected void onInitialize()
@@ -186,6 +132,14 @@ public class Spinner<T extends Number> extends TextField<T> implements IJQueryWi
 		super.onInitialize();
 
 		this.add(JQueryWidget.newWidgetBehavior(this)); //cannot be in ctor as the markupId may be set manually afterward
+	}
+
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
+
+		this.setDisabled(!this.isEnabled());
 	}
 
 	/**
@@ -216,12 +170,11 @@ public class Spinner<T extends Number> extends TextField<T> implements IJQueryWi
 	/**
 	 * Disables the spinner, if set to true.
 	 *
-	 * @param disabled
+	 * @param disabled whether the spinner is (visually) disabled
 	 * @return this, for chaining
 	 */
-	public Spinner<T> setDisabled(final boolean disabled)
+	private Spinner<T> setDisabled(final boolean disabled)
 	{
-		super.setEnabled(!disabled);
 		this.options.set("disabled", disabled);
 
 		return this;
