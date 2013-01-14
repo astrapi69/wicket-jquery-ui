@@ -85,7 +85,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 		// renders javascript events
 		if (this.events != null)
 		{
-			StringBuilder statements = new StringBuilder("$(function() { ");
+			StringBuilder statements = new StringBuilder("jQuery(function() { ");
 
 			for (String event : this.events)
 			{
@@ -169,7 +169,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 			this.events = new ArrayList<String>();
 		}
 
-		this.events.add(String.format("$('%s').on('%s', %s);", selector, event, callback));
+		this.events.add(String.format("jQuery('%s').on('%s', %s);", selector, event, callback));
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 * Gets the jQuery statement.<br/>
 	 * <b>Warning: </b> This method is *not* called by this behavior directly (only {@link #$()} is).
 	 * @param options the list of options to be supplied to the current method
-	 * @return Statement like '$(function() { ... })'
+	 * @return Statement like 'jQuery(function() { ... })'
 	 */
 	public String $(Object... options)
 	{
@@ -193,7 +193,7 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 * Gets the jQuery statement.<br/>
 	 * <b>Warning: </b> This method is *not* called by this behavior directly (only {@link #$()} is).
 	 * @param options the options to be supplied to the current method
-	 * @return Statement like '$(function() { ... })'
+	 * @return Statement like 'jQuery(function() { ... })'
 	 */
 	public String $(String options)
 	{
@@ -205,10 +205,10 @@ public class JQueryBehavior extends JQueryAbstractBehavior
 	 * @param selector the html selector (ie: "#myId")
 	 * @param method the jQuery method to invoke
 	 * @param options the options to be applied
-	 * @return Statement like '$(function() { ... })'
+	 * @return Statement like 'jQuery(function() { ... })'
 	 */
 	private static String $(String selector, String method, String options)
 	{
-		return String.format("$(function() { $('%s').%s(%s); });", selector, method, options);
+		return String.format("jQuery(function() { jQuery('%s').%s(%s); });", selector, method, options);
 	}
 }

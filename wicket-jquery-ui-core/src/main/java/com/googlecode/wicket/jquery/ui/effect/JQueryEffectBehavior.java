@@ -117,7 +117,7 @@ public class JQueryEffectBehavior extends JQueryAbstractBehavior
 	/**
 	 * Gets the jQuery statement.
 	 * @param effect the effect to be played
-	 * @return String like '$(function() { ... })'
+	 * @return Statement like 'jQuery(function() { ... })'
 	 */
 	public String $(String effect)
 	{
@@ -128,7 +128,7 @@ public class JQueryEffectBehavior extends JQueryAbstractBehavior
 	 * Gets the jQuery statement.
 	 * @param effect the effect to be played
 	 * @param options the options to be applied
-	 * @return String like '$(function() { ... })'
+	 * @return Statement like 'jQuery(function() { ... })'
 	 */
 	public String $(String effect, String options)
 	{
@@ -141,10 +141,10 @@ public class JQueryEffectBehavior extends JQueryAbstractBehavior
 	 * @param options the options to be applied
 	 * @param speed the speed of the effect
 	 * @param callback the callback script to run once the effect completes
-	 * @return String like '$(function() { ... })'
+	 * @return Statement like 'jQuery(function() { ... })'
 	 */
 	private static String $(String selector, String effect, String options, int speed, String callback)
 	{
-		return String.format("$(function() { $('%s').%s('%s', %s, %d, function() { %s }); });", selector, METHOD, effect, options, speed, callback);
+		return String.format("jQuery(function() { jQuery('%s').%s('%s', %s, %d, function() { %s }); });", selector, METHOD, effect, options, speed, callback);
 	}
 }

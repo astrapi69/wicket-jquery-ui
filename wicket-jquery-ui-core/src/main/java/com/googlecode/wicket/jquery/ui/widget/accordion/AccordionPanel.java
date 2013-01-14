@@ -240,7 +240,7 @@ public class AccordionPanel extends JQueryPanel
 			@Override
 			public CharSequence getCallbackScript()
 			{
-				return this.generateCallbackScript("wicketAjaxGet('" + this.getCallbackUrl() + "&index=' + $(event.target).accordion('option', 'active')");
+				return this.generateCallbackScript("wicketAjaxGet('" + this.getCallbackUrl() + "&index=' + jQuery(event.target).accordion('option', 'active')");
 			}
 
 			@Override

@@ -178,7 +178,7 @@ public class Menu extends JQueryPanel
 			@Override
 			public CharSequence getCallbackScript()
 			{
-				return this.generateCallbackScript("wicketAjaxGet('" + this.getCallbackUrl() + "&index=' + $(event.target).tabs('option', 'active')");
+				return this.generateCallbackScript("wicketAjaxGet('" + this.getCallbackUrl() + "&index=' + jQuery(event.target).tabs('option', 'active')");
 			}
 
 			@Override

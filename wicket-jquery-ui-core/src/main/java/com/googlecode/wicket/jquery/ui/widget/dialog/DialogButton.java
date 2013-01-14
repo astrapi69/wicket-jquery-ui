@@ -166,7 +166,7 @@ public class DialogButton implements IClusterable
 	 */
 	private void enable(AjaxRequestTarget target)
 	{
-		target.appendJavaScript(String.format("$('#%s').button('enable');", this.getMarkupId()));
+		target.appendJavaScript(String.format("jQuery('#%s').button('enable');", this.getMarkupId()));
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class DialogButton implements IClusterable
 	 */
 	private void disable(AjaxRequestTarget target)
 	{
-		target.appendJavaScript(String.format("$('#%s').button('disable');", this.getMarkupId()));
+		target.appendJavaScript(String.format("jQuery('#%s').button('disable');", this.getMarkupId()));
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class DialogButton implements IClusterable
 	 */
 	private void show(AjaxRequestTarget target)
 	{
-		target.appendJavaScript(String.format("$('#%s').show();", this.getMarkupId()));
+		target.appendJavaScript(String.format("jQuery('#%s').show();", this.getMarkupId()));
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class DialogButton implements IClusterable
 	 */
 	private void hide(AjaxRequestTarget target)
 	{
-		target.appendJavaScript(String.format("$('#%s').hide();", this.getMarkupId()));
+		target.appendJavaScript(String.format("jQuery('#%s').hide();", this.getMarkupId()));
 	}
 
 
